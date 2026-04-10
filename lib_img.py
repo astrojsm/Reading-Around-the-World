@@ -128,7 +128,7 @@ def build_share_image(fig):
     draw = ImageDraw.Draw(final_img)
     title = "Reading Around the World Challenge"
     try:
-        title_font = load_font("NotoSans-Bold.ttf", 70)
+        title_font = load_font("SourceSans3-Bold.ttf", 70)
     except:
         title_font = ImageFont.load_default()
 

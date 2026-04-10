@@ -1,4 +1,3 @@
-import json
 import pandas as pd
 import streamlit as st
 import plotly.express as px
@@ -6,15 +5,147 @@ import plotly.express as px
 from lib_web import field_label, add_book, replace_book, remove_book
 from lib_web import load_books_from_csv, build_country_csv_df
 from lib_web import render_progress_circles, add_small_country_markers
-from lib_web import country_map, continent_labels, continent_colors, continents_code, continents_kr
+from lib_web import country_map, continent_labels, continent_colors, continents_kr
 from lib_web import normalize_text, optional_suffix
 
 from lib_img import prepare_share_image, reset_share_state
 from lib_pdf import prepare_share_pdf, reset_pdf_state
 
-st.set_page_config(page_title="Reading Around the World Challenge", layout="wide")
+current_books = st.session_state.get("books", [])
+visited_country_count = len({book.get("country_iso") for book in current_books if book.get("country_iso")})
+has_crown = visited_country_count >= 200
+crown_suffix = " 👑" if has_crown else ""
 
-st.title("Reading Around the World Challenge")
+st.set_page_config(
+    page_title="Reading Around the World Challenge",
+    layout="wide"
+)
+
+st.markdown(
+    """
+    <style>
+        /* Layout */
+        .main .block-container {
+            max-width: 1180px;
+            padding-top: 2.1rem;
+            padding-bottom: 2rem;
+        }
+
+        /* Hero */
+        .hero-card {
+            border: 1.5px solid rgba(30, 41, 59, 0.2);
+            border-radius: 18px;
+            padding: 1.6rem 1.8rem;
+            margin-bottom: 1.1rem;
+        }
+
+        .hero-title {
+            margin: 0 0 0.6rem;
+            color: #11223a;
+            font-size: clamp(1.8rem, 1.4rem + 2vw, 3rem);
+            line-height: 1.18;
+            font-weight: 800;
+        }
+
+        .hero-description {
+            margin-top: 0.82rem;
+            margin-bottom: 0;
+            color: #25364c;
+            font-size: 1.03rem;
+            line-height: 1.72;
+            max-width: 840px;
+        }
+
+        /* Hero progress chip */
+        .hero-chip {
+            display: inline-block;
+            margin-top: 0.95rem;
+            padding: 0.32rem 0.8rem;
+            border-radius: 999px;
+            font-size: 0.86rem;
+            font-weight: 700;
+            color: #1e3a5f;
+            background: rgba(153, 206, 255, 0.24);
+            border: 1px solid rgba(73, 132, 184, 0.3);
+        }
+
+        /* Form fields: base */
+        [data-testid="stSelectbox"] div[data-baseweb="select"] > div,
+        [data-testid="stTextInput"] div[data-baseweb="input"],
+        [data-testid="stTextInput"] div[data-baseweb="input"] > div,
+        [data-testid="stTextInput"] div[data-baseweb="base-input"] {
+            border-radius: 12px;
+            border-color: rgba(32, 51, 82, 0.5) !important;
+            border-width: 1.5px !important;
+            background-color: rgba(255, 255, 255, 0.9);
+        }
+
+        /* Form fields: focus */
+        [data-testid="stTextInput"] div[data-baseweb="input"]:focus-within,
+        [data-testid="stTextInput"] div[data-baseweb="input"]:focus-within > div,
+        [data-testid="stTextInput"] div[data-baseweb="base-input"]:focus-within,
+        [data-testid="stSelectbox"] div[data-baseweb="select"]:focus-within > div {
+            border-color: #4984b8 !important;
+            border-width: 2px !important;
+            box-shadow: none !important;
+        }
+
+        /* Buttons */
+        .stButton > button,
+        .stDownloadButton > button {
+            border-radius: 12px;
+            border: 1px solid rgba(27, 44, 68, 0.22);
+            color: #16253c;
+            font-weight: 700;
+            transition: border-color 0.16s ease;
+        }
+
+        .stButton > button:hover,
+        .stDownloadButton > button:hover {
+            border-color: rgba(36, 66, 104, 0.34);
+        }
+
+        /* File uploader */
+        [data-testid="stFileUploader"] {
+            border-radius: 14px;
+            border: 1px dashed rgba(34, 62, 94, 0.28);
+            background: rgba(255, 255, 255, 0.65);
+            padding: 0.25rem 0.5rem;
+        }
+
+        /* Responsive */
+        @media (max-width: 820px) {
+            .main .block-container {
+                padding-top: 1.3rem;
+            }
+
+            .hero-card {
+                padding: 1.2rem 1.1rem;
+            }
+
+            .hero-description {
+                font-size: 0.97rem;
+            }
+        }
+    </style>
+    """,
+    unsafe_allow_html=True,
+)
+
+st.markdown(
+    f"""
+    <section class="hero-card">
+        <h1 class="hero-title">Reading Around the World Challenge</h1>
+        <p class="hero-description">
+            Reading Around the World 챌린지는 전 세계 각 나라 출신 작가의 책을 최소 한 권씩 읽는 독서 챌린지입니다.<br>
+            다양한 문화와 시선을 경험하며 나만의 세계 지도를 완성해보세요.<br>
+            200개가 넘는 국가와 지역의 작품을 읽으면 챌린지를 달성할 수 있습니다.
+        </p>
+        <span class="hero-chip">현재 방문 국가: {visited_country_count} / 200 {crown_suffix}</span>
+    </section>
+    """,
+    unsafe_allow_html=True,
+)
 
 # Initialize session state
 if "books" not in st.session_state:
