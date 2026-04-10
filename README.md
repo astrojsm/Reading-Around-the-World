@@ -4,8 +4,8 @@
 [https://reading-around-the-world.streamlit.app](https://reading-around-the-world.streamlit.app/)  
 
 
-Reading Around the World 챌린지에서의 진행 상황을 추적할 수 있는 인터랙티브 앱입니다.  
-국가별로 읽은 책을 기록하고, 세계 지도 위에서 독서 여정을 시각화할 수 있게 도와줍니다.
+Reading Around the World 챌린지의 진행 상황을 추적할 수 있는 인터랙티브 앱입니다.  
+국가별로 읽은 책을 기록하고 독서 여정을 세계 지도 위에 시각화할 수 있게 도와줍니다.
 
 - 국가별 독서 기록 입력
 - 세계 지도 기반 시각화
