@@ -1,4 +1,5 @@
 import io
+import unicodedata
 from html import escape
 from pathlib import Path
 
@@ -136,6 +137,9 @@ def script_key(ch):
         return "cjk"
     return "base"
 
+def is_neutral_char(ch):
+    return unicodedata.category(ch)[0] in {"P", "Z"}
+
 def shape_arabic_text(text):
     if not ARABIC_SHAPING_AVAILABLE:
         return text
@@ -151,18 +155,38 @@ def script_runs(text):
         return []
 
     runs = []
-    current_key = script_key(text[0])
-    current_chars = [text[0]]
+    current_key = None
+    current_chars = []
+    pending_neutral = []
 
-    for ch in text[1:]:
+    for ch in text:
         key = script_key(ch)
+
+        if key == "base" and is_neutral_char(ch):
+            pending_neutral.append(ch)
+            continue
+
+        if current_key is None:
+            current_key = key
+            current_chars.extend(pending_neutral)
+            pending_neutral = []
+            current_chars.append(ch)
+            continue
+
         if key == current_key:
+            current_chars.extend(pending_neutral)
+            pending_neutral = []
             current_chars.append(ch)
         else:
             runs.append((current_key, "".join(current_chars)))
             current_key = key
-            current_chars = [ch]
+            current_chars = pending_neutral + [ch]
+            pending_neutral = []
 
+    if current_key is None:
+        return [("base", "".join(pending_neutral))]
+
+    current_chars.extend(pending_neutral)
     runs.append((current_key, "".join(current_chars)))
     return runs
 
