@@ -1,0 +1,317 @@
+import json
+import pandas as pd
+import streamlit as st
+import plotly.express as px
+
+from lib_web import field_label, add_book, replace_book, remove_book
+from lib_web import load_books_from_csv, build_country_csv_df
+from lib_web import render_progress_circles, add_small_country_markers
+from lib_web import country_map, continent_labels, continent_colors, continents_code, continents_kr
+from lib_web import normalize_text, optional_suffix
+
+from lib_img import prepare_share_image, reset_share_state
+from lib_pdf import prepare_share_pdf, reset_pdf_state
+
+st.set_page_config(page_title="Reading Around the World Challenge", layout="wide")
+
+st.title("Reading Around the World Challenge")
+
+# Initialize session state
+if "books" not in st.session_state:
+    st.session_state.books = []
+
+if "replace" not in st.session_state:
+    st.session_state.replace = None
+
+if "form_feedback" not in st.session_state:
+    st.session_state.form_feedback = None
+
+if "upload_feedback" not in st.session_state:
+    st.session_state.upload_feedback = None
+
+if "uploader_key" not in st.session_state:
+    st.session_state.uploader_key = 0
+
+if "share_ready" not in st.session_state:
+    st.session_state.share_ready = False
+
+if "share_img_bytes" not in st.session_state:
+    st.session_state.share_img_bytes = None
+
+if "share_pdf_ready" not in st.session_state:
+    st.session_state.share_pdf_ready = False
+
+if "share_pdf_bytes" not in st.session_state:
+    st.session_state.share_pdf_bytes = None
+
+# Book input form; add new books to the list
+# st.subheader("새로 추가하기")
+title_col1, title_col2 = st.columns(2)
+with title_col1:
+    field_label("제목", required=True)
+    title = st.text_input("제목", key="title_input", label_visibility="collapsed")
+with title_col2:
+    field_label("제목(원어)")
+    st.text_input("제목(원어)", key="title_original_input", label_visibility="collapsed")
+
+author_col1, author_col2 = st.columns(2)
+with author_col1:
+    field_label("저자", required=True)
+    author = st.text_input("저자", key="author_input", label_visibility="collapsed")
+with author_col2:
+    field_label("저자(원어)")
+    st.text_input("저자(원어)", key="author_original_input", label_visibility="collapsed")
+
+col1, col2, col3 = st.columns(3)
+with col1:
+    field_label("국가", required=True)
+    selected_continent = st.selectbox(
+        "국가",
+        options=continents_kr,
+        key="selected_continent",
+        index=None,
+        placeholder="대륙 선택",
+        label_visibility="collapsed"
+    )
+
+selected_continent_code = None
+if selected_continent is not None:
+    selected_continent_code = {
+        v: k for k, v in continent_labels.items()
+    }[selected_continent]
+
+registered_isos = {book["country_iso"] for book in st.session_state.books}
+
+def format_country_option(country_name):
+    info = country_map.get(country_name, {})
+    country_iso = info.get("iso")
+    if country_iso in registered_isos:
+        return f"{country_name} (V)"
+    return country_name
+
+filtered_countries = [
+    name for name, info in country_map.items()
+    if info["continent"] == selected_continent_code
+]
+
+with col2:
+    field_label("")
+    country_kr = st.selectbox(
+        "국가",
+        options=filtered_countries,
+        format_func=format_country_option,
+        key="selected_country",
+        index=None,
+        placeholder="국가 선택",
+        label_visibility="collapsed",
+        disabled=(selected_continent_code is None)
+    )
+
+with col3:
+    field_label("출판연도")
+    st.text_input("출판연도", key="publication_year_input", label_visibility="collapsed")
+
+add_col1, add_col2, add_col3 = st.columns([1, 1, 8])
+
+with add_col1:
+    st.button("추가", on_click=add_book, width="stretch")
+
+with add_col2:
+    st.button("제거", on_click=remove_book, width="stretch")
+
+if st.session_state.form_feedback is not None:
+    level, message = st.session_state.form_feedback
+    if level == "warning":
+        st.warning(message)
+    elif level == "success":
+        st.success(message)
+    st.session_state.form_feedback = None
+
+# If there's already a book for the country, ask if user wants to replace it
+if st.session_state.replace is not None:
+    candidate = st.session_state.replace
+    existing_book = st.session_state.books[candidate["index"]]
+    new_book = candidate["new_book"]
+
+    st.warning(
+        f"{new_book['country_kr']}에는 이미 "
+        f"{existing_book['title']}이(가) 등록되어 있어요."
+    )
+
+    rep_col1, rep_col2, rep_col3 = st.columns([1, 1, 8])
+
+    with rep_col1:
+        st.button("교체하기", on_click=replace_book, width="stretch")
+
+    with rep_col2:
+        if st.button("취소", width="stretch"):
+            st.session_state.replace = None
+            st.rerun()
+
+# Upload button
+uploaded_csv = st.file_uploader(
+    "데이터 불러오기",
+    type=["csv"],
+    key=f"uploaded_csv_{st.session_state.uploader_key}"
+)
+
+if uploaded_csv is not None and st.button("불러오기"):
+    with st.spinner("파일을 불러오는 중입니다..."):
+        level, message = load_books_from_csv(uploaded_csv)
+
+    st.session_state.upload_feedback = (level, message)
+    st.session_state.uploader_key += 1
+    st.rerun()
+
+if st.session_state.upload_feedback is not None:
+    level, message = st.session_state.upload_feedback
+    if level == "error":
+        st.error(message)
+    elif level == "warning":
+        st.warning(message)
+    else:
+        st.success(message)
+    st.session_state.upload_feedback = None
+
+# Display books and country counts
+if st.session_state.books:
+    books_df = pd.DataFrame(st.session_state.books)
+
+    render_progress_circles()
+
+    country_status = books_df[[
+        "country_kr",
+        "country_iso",
+        "author",
+        "author_original",
+        "title",
+        "title_original",
+        "publication_year",
+    ]].copy()
+    for col in ["author", "author_original", "title", "title_original", "publication_year"]:
+        country_status[col] = country_status[col].apply(normalize_text)
+
+    country_status["author_original_suffix"] = country_status["author_original"].apply(optional_suffix)
+    country_status["title_original_suffix"] = country_status["title_original"].apply(optional_suffix)
+    country_status["publication_year_suffix"] = country_status["publication_year"].apply(optional_suffix)
+    country_status["continent_code"] = country_status["country_kr"].map(
+        lambda country: country_map[country]["continent"]
+    )
+
+    #st.subheader("세계 지도")
+    fig = px.choropleth(
+        country_status,
+        locations="country_iso",
+        locationmode="ISO-3",
+        color="continent_code",
+        hover_name="country_kr",
+        color_discrete_map={k: v for k, v in continent_colors.items() if k != "TT"},
+        custom_data=[
+            "country_kr",
+            "author",
+            "author_original_suffix",
+            "title",
+            "title_original_suffix",
+            "publication_year_suffix",
+        ]
+    )
+
+    fig.update_traces(
+        hovertemplate=(
+            "<b>%{customdata[0]}</b><br>"
+            "%{customdata[1]}%{customdata[2]}<br>"
+            "『%{customdata[3]}%{customdata[4]}』%{customdata[5]}<br>"
+            "<extra></extra>"
+        ),
+        selector=dict(type="choropleth")
+    )
+
+    fig.update_layout(
+        height=500,
+        margin=dict(l=0, r=0, t=0, b=0), 
+        showlegend=False, 
+        coloraxis_showscale=False,
+        dragmode=False,
+        geo=dict(
+            resolution=110,
+            showcoastlines=True,
+            showcountries=False,
+            lataxis=dict(range=[-55, 90])
+        ),
+        hoverdistance=1,
+        hovermode="closest",
+        hoverlabel=dict(
+            bgcolor="rgba(255,255,255,0.95)",
+            bordercolor="rgba(0,0,0,0.1)",
+            font_size=13,
+        )
+    )
+
+    add_small_country_markers(fig, books_df)
+
+    st.plotly_chart(
+        fig,
+        width="stretch",
+        config={
+            "scrollZoom": False,
+            "doubleClick": False,
+            "displayModeBar": False,
+        },
+    )
+else:
+    st.info("아직 추가된 책이 없어요.")
+
+# Download and delete buttons
+if st.session_state.books:
+    action_col1, action_col2, action_col3, action_col4 = st.columns(4)
+
+    with action_col1:
+        if not st.session_state.share_ready:
+            st.button(
+                "이미지로 공유하기",
+                on_click=prepare_share_image,
+                args=(fig,),
+                width="stretch",
+            )
+        else:
+            st.download_button(
+                label="이미지 다운로드 (PNG)",
+                data=st.session_state.share_img_bytes,
+                file_name="reading_world_progress.png",
+                mime="image/png",
+                on_click=reset_share_state,
+                width="stretch",
+            )
+
+    with action_col2:
+        if not st.session_state.share_pdf_ready:
+            st.button(
+                "리스트로 공유하기", 
+                on_click=prepare_share_pdf, 
+                width="stretch"
+            )
+        else:
+            st.download_button(
+                label="리스트 다운로드 (PDF)",
+                data=st.session_state.share_pdf_bytes,
+                file_name="reading_world_progress.pdf",
+                mime="application/pdf",
+                on_click=reset_pdf_state,
+                width="stretch",
+            )
+
+    with action_col3:
+        csv_df = build_country_csv_df()
+        csv_bytes = csv_df.to_csv(index=False, encoding="utf-8-sig").encode("utf-8-sig")
+        st.download_button(
+            label="데이터 저장하기",
+            data=csv_bytes,
+            file_name="reading_around_the_world.csv",
+            mime="text/csv",
+            width="stretch",
+        )
+
+    with action_col4:
+        if st.button("데이터 삭제하기", width="stretch"):
+            st.session_state.books = []
+            st.rerun()

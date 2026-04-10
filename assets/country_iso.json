@@ -1,0 +1,814 @@
+{
+  "가나": {
+    "iso": "GHA",
+    "continent": "AF"
+  },
+  "가봉": {
+    "iso": "GAB",
+    "continent": "AF"
+  },
+  "감비아": {
+    "iso": "GMB",
+    "continent": "AF"
+  },
+  "기니": {
+    "iso": "GIN",
+    "continent": "AF"
+  },
+  "기니비사우": {
+    "iso": "GNB",
+    "continent": "AF"
+  },
+  "나미비아": {
+    "iso": "NAM",
+    "continent": "AF"
+  },
+  "나이지리아": {
+    "iso": "NGA",
+    "continent": "AF"
+  },
+  "남수단": {
+    "iso": "SSD",
+    "continent": "AF"
+  },
+  "남아프리카공화국": {
+    "iso": "ZAF",
+    "continent": "AF"
+  },
+  "니제르": {
+    "iso": "NER",
+    "continent": "AF"
+  },
+  "라이베리아": {
+    "iso": "LBR",
+    "continent": "AF"
+  },
+  "레소토": {
+    "iso": "LSO",
+    "continent": "AF"
+  },
+  "르완다": {
+    "iso": "RWA",
+    "continent": "AF"
+  },
+  "리비아": {
+    "iso": "LBY",
+    "continent": "AF"
+  },
+  "마다가스카르": {
+    "iso": "MDG",
+    "continent": "AF"
+  },
+  "말라위": {
+    "iso": "MWI",
+    "continent": "AF"
+  },
+  "말리": {
+    "iso": "MLI",
+    "continent": "AF"
+  },
+  "모로코": {
+    "iso": "MAR",
+    "continent": "AF"
+  },
+  "모리셔스": {
+    "iso": "MUS",
+    "continent": "AF"
+  },
+  "모리타니": {
+    "iso": "MRT",
+    "continent": "AF"
+  },
+  "모잠비크": {
+    "iso": "MOZ",
+    "continent": "AF"
+  },
+  "베냉": {
+    "iso": "BEN",
+    "continent": "AF"
+  },
+  "보츠와나": {
+    "iso": "BWA",
+    "continent": "AF"
+  },
+  "부룬디": {
+    "iso": "BDI",
+    "continent": "AF"
+  },
+  "부르키나파소": {
+    "iso": "BFA",
+    "continent": "AF"
+  },
+  "상투메프린시페": {
+    "iso": "STP",
+    "continent": "AF"
+  },
+  "세네갈": {
+    "iso": "SEN",
+    "continent": "AF"
+  },
+  "세이셸": {
+    "iso": "SYC",
+    "continent": "AF"
+  },
+  "소말리아": {
+    "iso": "SOM",
+    "continent": "AF"
+  },
+  "수단": {
+    "iso": "SDN",
+    "continent": "AF"
+  },
+  "시에라리온": {
+    "iso": "SLE",
+    "continent": "AF"
+  },
+  "알제리": {
+    "iso": "DZA",
+    "continent": "AF"
+  },
+  "앙골라": {
+    "iso": "AGO",
+    "continent": "AF"
+  },
+  "에리트레아": {
+    "iso": "ERI",
+    "continent": "AF"
+  },
+  "에스와티니": {
+    "iso": "SWZ",
+    "continent": "AF"
+  },
+  "에티오피아": {
+    "iso": "ETH",
+    "continent": "AF"
+  },
+  "우간다": {
+    "iso": "UGA",
+    "continent": "AF"
+  },
+  "이집트": {
+    "iso": "EGY",
+    "continent": "AF"
+  },
+  "잠비아": {
+    "iso": "ZMB",
+    "continent": "AF"
+  },
+  "적도기니": {
+    "iso": "GNQ",
+    "continent": "AF"
+  },
+  "중앙아프리카공화국": {
+    "iso": "CAF",
+    "continent": "AF"
+  },
+  "지부티": {
+    "iso": "DJI",
+    "continent": "AF"
+  },
+  "짐바브웨": {
+    "iso": "ZWE",
+    "continent": "AF"
+  },
+  "차드": {
+    "iso": "TCD",
+    "continent": "AF"
+  },
+  "카메룬": {
+    "iso": "CMR",
+    "continent": "AF"
+  },
+  "카보베르데": {
+    "iso": "CPV",
+    "continent": "AF"
+  },
+  "케냐": {
+    "iso": "KEN",
+    "continent": "AF"
+  },
+  "코모로": {
+    "iso": "COM",
+    "continent": "AF"
+  },
+  "코트디부아르": {
+    "iso": "CIV",
+    "continent": "AF"
+  },
+  "콩고공화국": {
+    "iso": "COG",
+    "continent": "AF"
+  },
+  "콩고민주공화국": {
+    "iso": "COD",
+    "continent": "AF"
+  },
+  "탄자니아": {
+    "iso": "TZA",
+    "continent": "AF"
+  },
+  "토고": {
+    "iso": "TGO",
+    "continent": "AF"
+  },
+  "튀니지": {
+    "iso": "TUN",
+    "continent": "AF"
+  },
+  "네팔": {
+    "iso": "NPL",
+    "continent": "AS"
+  },
+  "대한민국": {
+    "iso": "KOR",
+    "continent": "AS"
+  },
+  "동티모르": {
+    "iso": "TLS",
+    "continent": "AS"
+  },
+  "라오스": {
+    "iso": "LAO",
+    "continent": "AS"
+  },
+  "레바논": {
+    "iso": "LBN",
+    "continent": "AS"
+  },
+  "마카오": {
+    "iso": "MAC",
+    "continent": "AS"
+  },
+  "말레이시아": {
+    "iso": "MYS",
+    "continent": "AS"
+  },
+  "몰디브": {
+    "iso": "MDV",
+    "continent": "AS"
+  },
+  "몽골": {
+    "iso": "MNG",
+    "continent": "AS"
+  },
+  "미얀마": {
+    "iso": "MMR",
+    "continent": "AS"
+  },
+  "바레인": {
+    "iso": "BHR",
+    "continent": "AS"
+  },
+  "방글라데시": {
+    "iso": "BGD",
+    "continent": "AS"
+  },
+  "베트남": {
+    "iso": "VNM",
+    "continent": "AS"
+  },
+  "부탄": {
+    "iso": "BTN",
+    "continent": "AS"
+  },
+  "브루나이": {
+    "iso": "BRN",
+    "continent": "AS"
+  },
+  "사우디아라비아": {
+    "iso": "SAU",
+    "continent": "AS"
+  },
+  "스리랑카": {
+    "iso": "LKA",
+    "continent": "AS"
+  },
+  "시리아": {
+    "iso": "SYR",
+    "continent": "AS"
+  },
+  "싱가포르": {
+    "iso": "SGP",
+    "continent": "AS"
+  },
+  "아랍에미리트": {
+    "iso": "ARE",
+    "continent": "AS"
+  },
+  "아프가니스탄": {
+    "iso": "AFG",
+    "continent": "AS"
+  },
+  "예멘": {
+    "iso": "YEM",
+    "continent": "AS"
+  },
+  "오만": {
+    "iso": "OMN",
+    "continent": "AS"
+  },
+  "요르단": {
+    "iso": "JOR",
+    "continent": "AS"
+  },
+  "우즈베키스탄": {
+    "iso": "UZB",
+    "continent": "AS"
+  },
+  "이라크": {
+    "iso": "IRQ",
+    "continent": "AS"
+  },
+  "이란": {
+    "iso": "IRN",
+    "continent": "AS"
+  },
+  "이스라엘": {
+    "iso": "ISR",
+    "continent": "AS"
+  },
+  "인도": {
+    "iso": "IND",
+    "continent": "AS"
+  },
+  "인도네시아": {
+    "iso": "IDN",
+    "continent": "AS"
+  },
+  "일본": {
+    "iso": "JPN",
+    "continent": "AS"
+  },
+  "조선민주주의인민공화국": {
+    "iso": "PRK",
+    "continent": "AS"
+  },
+  "중화인민공화국": {
+    "iso": "CHN",
+    "continent": "AS"
+  },
+  "카자흐스탄": {
+    "iso": "KAZ",
+    "continent": "AS"
+  },
+  "카타르": {
+    "iso": "QAT",
+    "continent": "AS"
+  },
+  "캄보디아": {
+    "iso": "KHM",
+    "continent": "AS"
+  },
+  "쿠웨이트": {
+    "iso": "KWT",
+    "continent": "AS"
+  },
+  "키르기스스탄": {
+    "iso": "KGZ",
+    "continent": "AS"
+  },
+  "키프로스": {
+    "iso": "CYP",
+    "continent": "AS"
+  },
+  "타이완": {
+    "iso": "TWN",
+    "continent": "AS"
+  },
+  "타지키스탄": {
+    "iso": "TJK",
+    "continent": "AS"
+  },
+  "태국": {
+    "iso": "THA",
+    "continent": "AS"
+  },
+  "투르크메니스탄": {
+    "iso": "TKM",
+    "continent": "AS"
+  },
+  "파키스탄": {
+    "iso": "PAK",
+    "continent": "AS"
+  },
+  "팔레스타인": {
+    "iso": "PSE",
+    "continent": "AS"
+  },
+  "필리핀": {
+    "iso": "PHL",
+    "continent": "AS"
+  },
+  "홍콩": {
+    "iso": "HKG",
+    "continent": "AS"
+  },
+  "나우루": {
+    "iso": "NRU",
+    "continent": "OC"
+  },
+  "뉴질랜드": {
+    "iso": "NZL",
+    "continent": "OC"
+  },
+  "니우에": {
+    "iso": "NIU",
+    "continent": "OC"
+  },
+  "마셜제도": {
+    "iso": "MHL",
+    "continent": "OC"
+  },
+  "미크로네시아연방": {
+    "iso": "FSM",
+    "continent": "OC"
+  },
+  "바누아투": {
+    "iso": "VUT",
+    "continent": "OC"
+  },
+  "사모아": {
+    "iso": "WSM",
+    "continent": "OC"
+  },
+  "솔로몬제도": {
+    "iso": "SLB",
+    "continent": "OC"
+  },
+  "오스트레일리아": {
+    "iso": "AUS",
+    "continent": "OC"
+  },
+  "쿡제도": {
+    "iso": "COK",
+    "continent": "OC"
+  },
+  "키리바시": {
+    "iso": "KIR",
+    "continent": "OC"
+  },
+  "통가": {
+    "iso": "TON",
+    "continent": "OC"
+  },
+  "투발루": {
+    "iso": "TUV",
+    "continent": "OC"
+  },
+  "파푸아뉴기니": {
+    "iso": "PNG",
+    "continent": "OC"
+  },
+  "팔라우": {
+    "iso": "PLW",
+    "continent": "OC"
+  },
+  "피지": {
+    "iso": "FJI",
+    "continent": "OC"
+  },
+  "그리스": {
+    "iso": "GRC",
+    "continent": "EU"
+  },
+  "네덜란드": {
+    "iso": "NLD",
+    "continent": "EU"
+  },
+  "노르웨이": {
+    "iso": "NOR",
+    "continent": "EU"
+  },
+  "덴마크": {
+    "iso": "DNK",
+    "continent": "EU"
+  },
+  "독일": {
+    "iso": "DEU",
+    "continent": "EU"
+  },
+  "라트비아": {
+    "iso": "LVA",
+    "continent": "EU"
+  },
+  "러시아": {
+    "iso": "RUS",
+    "continent": "EU"
+  },
+  "루마니아": {
+    "iso": "ROU",
+    "continent": "EU"
+  },
+  "룩셈부르크": {
+    "iso": "LUX",
+    "continent": "EU"
+  },
+  "리투아니아": {
+    "iso": "LTU",
+    "continent": "EU"
+  },
+  "리히텐슈타인": {
+    "iso": "LIE",
+    "continent": "EU"
+  },
+  "모나코": {
+    "iso": "MCO",
+    "continent": "EU"
+  },
+  "몬테네그로": {
+    "iso": "MNE",
+    "continent": "EU"
+  },
+  "몰도바": {
+    "iso": "MDA",
+    "continent": "EU"
+  },
+  "몰타": {
+    "iso": "MLT",
+    "continent": "EU"
+  },
+  "바티칸시국": {
+    "iso": "VAT",
+    "continent": "EU"
+  },
+  "벨기에": {
+    "iso": "BEL",
+    "continent": "EU"
+  },
+  "벨라루스": {
+    "iso": "BLR",
+    "continent": "EU"
+  },
+  "보스니아헤르체고비나": {
+    "iso": "BIH",
+    "continent": "EU"
+  },
+  "북마케도니아": {
+    "iso": "MKD",
+    "continent": "EU"
+  },
+  "불가리아": {
+    "iso": "BGR",
+    "continent": "EU"
+  },
+  "산마리노": {
+    "iso": "SMR",
+    "continent": "EU"
+  },
+  "세르비아": {
+    "iso": "SRB",
+    "continent": "EU"
+  },
+  "스웨덴": {
+    "iso": "SWE",
+    "continent": "EU"
+  },
+  "스위스": {
+    "iso": "CHE",
+    "continent": "EU"
+  },
+  "스페인": {
+    "iso": "ESP",
+    "continent": "EU"
+  },
+  "슬로바키아": {
+    "iso": "SVK",
+    "continent": "EU"
+  },
+  "슬로베니아": {
+    "iso": "SVN",
+    "continent": "EU"
+  },
+  "아르메니아": {
+    "iso": "ARM",
+    "continent": "EU"
+  },
+  "아이슬란드": {
+    "iso": "ISL",
+    "continent": "EU"
+  },
+  "아일랜드": {
+    "iso": "IRL",
+    "continent": "EU"
+  },
+  "아제르바이잔": {
+    "iso": "AZE",
+    "continent": "EU"
+  },
+  "안도라": {
+    "iso": "AND",
+    "continent": "EU"
+  },
+  "알바니아": {
+    "iso": "ALB",
+    "continent": "EU"
+  },
+  "에스토니아": {
+    "iso": "EST",
+    "continent": "EU"
+  },
+  "영국": {
+    "iso": "GBR",
+    "continent": "EU"
+  },
+  "오스트리아": {
+    "iso": "AUT",
+    "continent": "EU"
+  },
+  "우크라이나": {
+    "iso": "UKR",
+    "continent": "EU"
+  },
+  "이탈리아": {
+    "iso": "ITA",
+    "continent": "EU"
+  },
+  "조지아": {
+    "iso": "GEO",
+    "continent": "EU"
+  },
+  "체코": {
+    "iso": "CZE",
+    "continent": "EU"
+  },
+  "코소보": {
+    "iso": "XKX",
+    "continent": "EU"
+  },
+  "크로아티아": {
+    "iso": "HRV",
+    "continent": "EU"
+  },
+  "튀르키예": {
+    "iso": "TUR",
+    "continent": "EU"
+  },
+  "포르투갈": {
+    "iso": "PRT",
+    "continent": "EU"
+  },
+  "폴란드": {
+    "iso": "POL",
+    "continent": "EU"
+  },
+  "프랑스": {
+    "iso": "FRA",
+    "continent": "EU"
+  },
+  "핀란드": {
+    "iso": "FIN",
+    "continent": "EU"
+  },
+  "헝가리": {
+    "iso": "HUN",
+    "continent": "EU"
+  },
+  "가이아나": {
+    "iso": "GUY",
+    "continent": "AM"
+  },
+  "그레나다": {
+    "iso": "GRD",
+    "continent": "AM"
+  },
+  "그린란드": {
+    "iso": "GRL",
+    "continent": "AM"
+  },
+  "과테말라": {
+    "iso": "GTM",
+    "continent": "AM"
+  },
+  "니카라과": {
+    "iso": "NIC",
+    "continent": "AM"
+  },
+  "도미니카공화국": {
+    "iso": "DOM",
+    "continent": "AM"
+  },
+  "도미니카연방": {
+    "iso": "DMA",
+    "continent": "AM"
+  },
+  "멕시코": {
+    "iso": "MEX",
+    "continent": "AM"
+  },
+  "미국": {
+    "iso": "USA",
+    "continent": "AM"
+  },
+  "바베이도스": {
+    "iso": "BRB",
+    "continent": "AM"
+  },
+  "바하마": {
+    "iso": "BHS",
+    "continent": "AM"
+  },
+  "베네수엘라": {
+    "iso": "VEN",
+    "continent": "AM"
+  },
+  "벨리즈": {
+    "iso": "BLZ",
+    "continent": "AM"
+  },
+  "볼리비아": {
+    "iso": "BOL",
+    "continent": "AM"
+  },
+  "브라질": {
+    "iso": "BRA",
+    "continent": "AM"
+  },
+  "세인트루시아": {
+    "iso": "LCA",
+    "continent": "AM"
+  },
+  "세인트빈센트그레나딘": {
+    "iso": "VCT",
+    "continent": "AM"
+  },
+  "세인트키츠네비스": {
+    "iso": "KNA",
+    "continent": "AM"
+  },
+  "수리남": {
+    "iso": "SUR",
+    "continent": "AM"
+  },
+  "아르헨티나": {
+    "iso": "ARG",
+    "continent": "AM"
+  },
+  "아이티": {
+    "iso": "HTI",
+    "continent": "AM"
+  },
+  "앤티가바부다": {
+    "iso": "ATG",
+    "continent": "AM"
+  },
+  "에콰도르": {
+    "iso": "ECU",
+    "continent": "AM"
+  },
+  "엘살바도르": {
+    "iso": "SLV",
+    "continent": "AM"
+  },
+  "온두라스": {
+    "iso": "HND",
+    "continent": "AM"
+  },
+  "우루과이": {
+    "iso": "URY",
+    "continent": "AM"
+  },
+  "자메이카": {
+    "iso": "JAM",
+    "continent": "AM"
+  },
+  "칠레": {
+    "iso": "CHL",
+    "continent": "AM"
+  },
+  "캐나다": {
+    "iso": "CAN",
+    "continent": "AM"
+  },
+  "코스타리카": {
+    "iso": "CRI",
+    "continent": "AM"
+  },
+  "콜롬비아": {
+    "iso": "COL",
+    "continent": "AM"
+  },
+  "쿠바": {
+    "iso": "CUB",
+    "continent": "AM"
+  },
+  "트리니다드토바고": {
+    "iso": "TTO",
+    "continent": "AM"
+  },
+  "파나마": {
+    "iso": "PAN",
+    "continent": "AM"
+  },
+  "파라과이": {
+    "iso": "PRY",
+    "continent": "AM"
+  },
+  "페루": {
+    "iso": "PER",
+    "continent": "AM"
+  },
+  "푸에르토리코": {
+    "iso": "PRI",
+    "continent": "AM"
+   }
+}
