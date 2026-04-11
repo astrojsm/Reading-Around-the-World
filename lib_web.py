@@ -384,17 +384,39 @@ def build_progress_summary():
 
     return items
 
-def render_progress_circles():
+def render_progress_circles(screen_width=None):
     items = build_progress_summary()
+
+    columns = 6
+    scale_factor = 1.16
+    circle_size = 96
+    circle_border = 3
+    circle_margin_bottom = 6
+    value_font_size = 17
+    label_font_size = 14
+    if isinstance(screen_width, (int, float)):
+        if screen_width <= 420:
+            columns = 2
+        elif screen_width <= 760:
+            columns = 3
+
+        circle_size = max(84, min(120, int((screen_width / (columns * 2.35)) * scale_factor)))
+        circle_border = max(2, min(4, int(circle_size * 0.032)))
+        circle_margin_bottom = max(4, int(circle_size * 0.06))
+        value_font_size = max(14, min(20, int(circle_size * 0.18)))
+        label_font_size = max(12, min(16, int(circle_size * 0.145)))
+
+    row_gap = max(20, int(circle_size * 0.26)) if columns <= 3 else max(24, int(circle_size * 0.31))
+    col_gap = max(28, int(circle_size * 0.38)) if columns <= 3 else max(36, int(circle_size * 0.52))
 
     cards_html = "".join(
         f"""
         <div style="text-align:center;">
             <div style="
                 position:relative;
-                width:96px; height:96px;
-                margin:0 auto 6px auto;
-                border:3px solid black;
+                width:{circle_size}px; height:{circle_size}px;
+                margin:0 auto {circle_margin_bottom}px auto;
+                border:{circle_border}px solid black;
                 border-radius:50%;
                 background:#efefef;
                 overflow:hidden;
@@ -412,12 +434,12 @@ def render_progress_circles():
                     align-items:center;
                     justify-content:center;
                     font-weight:700;
-                    font-size:17px;
+                    font-size:{value_font_size}px;
                 ">
                     {item["done"]}/{item["total"]}
                 </div>
             </div>
-            <div style="font-size:14px; font-weight:600;">
+            <div style="font-size:{label_font_size}px; font-weight:600;">
                 {item["label"]}
             </div>
         </div>
@@ -427,10 +449,10 @@ def render_progress_circles():
 
     html = f"""
     <div style="
-        display:flex;
+        display:grid;
+        grid-template-columns: repeat({columns}, auto);
         justify-content:center;
-        gap:50px;
-        flex-wrap:wrap;
+        gap:{row_gap}px {col_gap}px;
         margin-bottom:0px;
     ">
         {cards_html}

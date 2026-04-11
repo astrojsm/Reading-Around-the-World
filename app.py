@@ -1,6 +1,7 @@
 import pandas as pd
 import streamlit as st
 import plotly.express as px
+from streamlit_js_eval import streamlit_js_eval
 
 from _version import __version__
 from lib_web import field_label, add_book, replace_book, remove_book
@@ -108,9 +109,8 @@ st.markdown(
 
         /* Checkbox spacing */
         [data-testid="stCheckbox"] {
-            margin-left: -1.8rem !important;
             margin-top: 0 !important;
-            margin-bottom: -1.35rem !important;
+            margin-bottom: -0.4rem !important;
         }
 
         [data-testid="stCheckbox"] > label {
@@ -163,35 +163,56 @@ st.markdown(
 )
 
 # Initialize session state
-if "books" not in st.session_state:
-    st.session_state.books = []
+SESSION_DEFAULTS = {
+    "books": [],
+    "replace": None,
+    "form_feedback": None,
+    "upload_feedback": None,
+    "uploader_key": 0,
+    "share_ready": False,
+    "share_img_bytes": None,
+    "share_pdf_ready": False,
+    "share_pdf_bytes": None,
+    "basic_only_countries": True,
+    "screen_width": None,
+}
+for key, default_value in SESSION_DEFAULTS.items():
+    if key not in st.session_state:
+        st.session_state[key] = default_value
 
-if "replace" not in st.session_state:
-    st.session_state.replace = None
+raw_width = streamlit_js_eval(
+    js_expressions="""
+    (() => {
+        if (!window.__readingWorldWidthListenerRegistered) {
+            window.__readingWorldWidthListenerRegistered = true;
 
-if "form_feedback" not in st.session_state:
-    st.session_state.form_feedback = None
+            let resizeTimer = null;
+            const publishWidth = () => sendDataToPython({
+                value: window.innerWidth,
+                dataType: \"json\",
+            });
 
-if "upload_feedback" not in st.session_state:
-    st.session_state.upload_feedback = None
+            window.addEventListener(\"resize\", () => {
+                window.clearTimeout(resizeTimer);
+                resizeTimer = window.setTimeout(publishWidth, 120);
+            });
 
-if "uploader_key" not in st.session_state:
-    st.session_state.uploader_key = 0
+            document.addEventListener(\"visibilitychange\", () => {
+                if (!document.hidden) {
+                    publishWidth();
+                }
+            });
+        }
 
-if "share_ready" not in st.session_state:
-    st.session_state.share_ready = False
-
-if "share_img_bytes" not in st.session_state:
-    st.session_state.share_img_bytes = None
-
-if "share_pdf_ready" not in st.session_state:
-    st.session_state.share_pdf_ready = False
-
-if "share_pdf_bytes" not in st.session_state:
-    st.session_state.share_pdf_bytes = None
-
-if "basic_only_countries" not in st.session_state:
-    st.session_state.basic_only_countries = True
+        return window.innerWidth;
+    })()
+    """,
+    key="get_width",
+)
+if isinstance(raw_width, (int, float)):
+    st.session_state.screen_width = int(raw_width)
+elif isinstance(raw_width, str) and raw_width.isdigit():
+    st.session_state.screen_width = int(raw_width)
 
 # Book input form; add new books to the list
 # st.subheader("새로 추가하기")
@@ -211,22 +232,18 @@ with author_col2:
     field_label("저자(원어)")
     st.text_input("저자(원어)", key="author_original_input", label_visibility="collapsed")
 
-label_col1, label_col2, label_col3 = st.columns(3)
-with label_col1:
-    continent_label_col, continent_toggle_col = st.columns([1, 4])
-    with continent_label_col:
-        field_label("국가", required=True)
-    with continent_toggle_col:
+is_small_screen = isinstance(st.session_state.get("screen_width"), int) and st.session_state.screen_width <= 760
+
+selected_continent = None
+input_col1, input_col2, input_col3 = st.columns(3)
+with input_col1:
+    field_label("국가", required=True)
+    if is_small_screen:
         st.checkbox(
-            "기본 목록만 표시",
+            "기본 목록만 보기",
             key="basic_only_countries",
             help="체크를 해제하면 기본 200개 이외의 추가 국가/지역을 선택할 수 있습니다."
         )
-with label_col3:
-    field_label("출판연도")
-
-input_col1, input_col2, input_col3 = st.columns(3)
-with input_col1:
     selected_continent = st.selectbox(
         "국가",
         options=continents_kr,
@@ -235,6 +252,14 @@ with input_col1:
         placeholder="대륙 선택",
         label_visibility="collapsed"
     )
+
+with input_col2:
+    if not is_small_screen:
+        st.checkbox(
+            "기본 목록만 보기",
+            key="basic_only_countries",
+            help="체크를 해제하면 기본 200개 이외의 추가 국가/지역을 선택할 수 있습니다."
+        )
 
 selected_continent_code = None
 if selected_continent is not None:
@@ -275,6 +300,7 @@ with input_col2:
     )
 
 with input_col3:
+    field_label("출판연도")
     st.text_input("출판연도", key="publication_year_input", label_visibility="collapsed")
 
 add_col1, add_col2, add_col3 = st.columns([1, 1, 8])
@@ -343,7 +369,9 @@ if st.session_state.upload_feedback is not None:
 if st.session_state.books:
     books_df = pd.DataFrame(st.session_state.books)
 
-    render_progress_circles()
+    screen_width = st.session_state.get("screen_width")
+    render_progress_circles(screen_width=screen_width)
+    map_height = max(260, int(screen_width * 0.35)) if isinstance(screen_width, int) else 500
 
     country_status = books_df[[
         "country_kr",
@@ -393,7 +421,7 @@ if st.session_state.books:
     )
 
     fig.update_layout(
-        height=500,
+        height=map_height,
         margin=dict(l=0, r=0, t=0, b=0), 
         showlegend=False, 
         coloraxis_showscale=False,

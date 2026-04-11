@@ -2,6 +2,12 @@
 
 All notable changes to this project will be documented in this file.
 
+## [1.1.0] - 2026-04-11
+
+### Improved
+- Enhanced mobile responsiveness across key layouts and components
+- Improved small-screen usability for country selection and controls
+
 ## [1.0.0] - 2026-04-11
 
 ### Added
