@@ -129,19 +129,12 @@ st.markdown(
         }
 
         /* Responsive */
-        @media (max-width: 820px) {
-            .main .block-container {
-                padding-top: 1.3rem;
-            }
-
+        @media (max-width: 735px) {
             .hero-card {
                 padding: 1.2rem 1.1rem;
             }
-
-            .hero-description {
-                font-size: 0.97rem;
-            }
         }
+
     </style>
     """,
     unsafe_allow_html=True,
@@ -152,7 +145,7 @@ st.markdown(
     <section class="hero-card">
         <h1 class="hero-title">Reading Around the World Challenge</h1>
         <p class="hero-description">
-            Reading Around the World 챌린지는 전 세계 각 나라 출신 작가의 책을 최소 한 권씩 읽는 것을 목표로 하는 독서 챌린지입니다.<br>
+            전 세계 각 나라 출신 작가의 책을 최소 한 권씩 읽는 것을 목표로 하는 독서 챌린지입니다.<br>
             다양한 문화와 시선을 경험하며 나만의 세계 지도를 완성해보세요.<br>
             200개 국가와 지역의 작품을 읽으면 챌린지를 달성할 수 있습니다.
         </p>
@@ -232,7 +225,7 @@ with author_col2:
     field_label("저자(원어)")
     st.text_input("저자(원어)", key="author_original_input", label_visibility="collapsed")
 
-is_small_screen = isinstance(st.session_state.get("screen_width"), int) and st.session_state.screen_width <= 760
+is_small_screen = isinstance(st.session_state.get("screen_width"), int) and st.session_state.screen_width <= 735
 
 selected_continent = None
 input_col1, input_col2, input_col3 = st.columns(3)
@@ -371,7 +364,7 @@ if st.session_state.books:
 
     screen_width = st.session_state.get("screen_width")
     render_progress_circles(screen_width=screen_width)
-    map_height = max(260, int(screen_width * 0.35)) if isinstance(screen_width, int) else 500
+    map_height = int(screen_width * 0.35) if isinstance(screen_width, int) else 500
 
     country_status = books_df[[
         "country_kr",
@@ -392,69 +385,121 @@ if st.session_state.books:
         lambda country: country_map[country]["continent"]
     )
 
-    #st.subheader("세계 지도")
-    fig = px.choropleth(
-        country_status,
-        locations="country_iso",
-        locationmode="ISO-3",
-        color="continent_code",
-        hover_name="country_kr",
-        color_discrete_map={k: v for k, v in continent_colors.items() if k != "TT"},
-        custom_data=[
-            "country_kr",
-            "author",
-            "author_original_suffix",
-            "title",
-            "title_original_suffix",
-            "publication_year_suffix",
-        ]
-    )
+    WORLD_ROTATION_LON = 13
+    # Absolute longitude ranges for each split map panel (before offset)
+    # MOBILE_SPLIT_LON_OFFSET: uniform longitude offset added to every range
+    MOBILE_SPLIT_LON_OFFSET = 27
+    MOBILE_SPLIT_LON_RANGES = [
+        (-180, -60),
+        (-60, 60),
+        (60, 180),
+    ]
 
-    fig.update_traces(
-        hovertemplate=(
-            "<b>%{customdata[0]}</b><br>"
-            "%{customdata[1]}%{customdata[2]}<br>"
-            "『%{customdata[3]}%{customdata[4]}』%{customdata[5]}<br>"
-            "<extra></extra>"
-        ),
-        selector=dict(type="choropleth")
-    )
+    def normalize_lon(lon):
+        return ((float(lon) + 180.0) % 360.0) - 180.0
 
-    fig.update_layout(
-        height=map_height,
-        margin=dict(l=0, r=0, t=0, b=0), 
-        showlegend=False, 
-        coloraxis_showscale=False,
-        dragmode=False,
-        geo=dict(
+    def build_map_figure(height, lon_range=None, rotation_lon=WORLD_ROTATION_LON):
+        map_fig = px.choropleth(
+            country_status,
+            locations="country_iso",
+            locationmode="ISO-3",
+            color="continent_code",
+            hover_name="country_kr",
+            color_discrete_map={k: v for k, v in continent_colors.items() if k != "TT"},
+            custom_data=[
+                "country_kr",
+                "author",
+                "author_original_suffix",
+                "title",
+                "title_original_suffix",
+                "publication_year_suffix",
+            ]
+        )
+
+        map_fig.update_traces(
+            hovertemplate=(
+                "<b>%{customdata[0]}</b><br>"
+                "%{customdata[1]}%{customdata[2]}<br>"
+                "『%{customdata[3]}%{customdata[4]}』%{customdata[5]}<br>"
+                "<extra></extra>"
+            ),
+            selector=dict(type="choropleth")
+        )
+
+        geo_config = dict(
             resolution=110,
             showcoastlines=True,
             showcountries=False,
             lataxis=dict(range=[-55, 90]),
-            projection=dict(rotation=dict(lon=13))
-        ),
-        hoverdistance=1,
-        hovermode="closest",
-        hoverlabel=dict(
-            bgcolor="rgba(255,255,255,0.95)",
-            bordercolor="rgba(0,0,0,0.1)",
-            font_size=13,
+            projection=dict(type="equirectangular", rotation=dict(lon=rotation_lon)),
         )
-    )
+        if lon_range is not None:
+            geo_config["lonaxis"] = dict(range=list(lon_range))
 
-    add_small_country_markers(fig, books_df)
+        map_fig.update_layout(
+            height=height,
+            margin=dict(l=0, r=0, t=0, b=0),
+            showlegend=False,
+            coloraxis_showscale=False,
+            dragmode=False,
+            geo=geo_config,
+            hoverdistance=1,
+            hovermode="closest",
+            hoverlabel=dict(
+                bgcolor="rgba(255,255,255,0.95)",
+                bordercolor="rgba(0,0,0,0.1)",
+                font_size=13,
+            )
+        )
 
-    st.plotly_chart(
-        fig,
-        width="stretch",
-        config={
-            "scrollZoom": False,
-            "doubleClick": False,
-            "displayModeBar": False,
-        },
-    )
+        add_small_country_markers(map_fig, books_df)
+        return map_fig
+
+    # Keep a full-world figure for share image export.
+    fig = build_map_figure(map_height)
+
+    if isinstance(screen_width, int) and screen_width <= 735:
+        split_map_height = int(screen_width * 0.9)
+        for lon_range in MOBILE_SPLIT_LON_RANGES:
+            if not isinstance(lon_range, (list, tuple)) or len(lon_range) != 2:
+                continue
+            try:
+                start_lon, end_lon = float(lon_range[0]), float(lon_range[1])
+            except (TypeError, ValueError):
+                continue
+
+            if not (0 < end_lon - start_lon <= 360):
+                continue
+
+            start_lon += MOBILE_SPLIT_LON_OFFSET
+            end_lon += MOBILE_SPLIT_LON_OFFSET
+
+            segment_fig = build_map_figure(
+                split_map_height,
+                lon_range=(start_lon, end_lon),
+                rotation_lon=normalize_lon((start_lon + end_lon) / 2.0),
+            )
+            st.plotly_chart(
+                segment_fig,
+                width="stretch",
+                config={
+                    "scrollZoom": False,
+                    "doubleClick": False,
+                    "displayModeBar": False,
+                },
+            )
+    else:
+        st.plotly_chart(
+            fig,
+            width="stretch",
+            config={
+                "scrollZoom": False,
+                "doubleClick": False,
+                "displayModeBar": False,
+            },
+        )
 else:
-    st.info("아직 추가된 책이 없어요.")
+    st.info("아직 추가된 책이 없습니다.")
 
 # Download and delete buttons
 if st.session_state.books:

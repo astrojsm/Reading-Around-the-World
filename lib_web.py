@@ -395,9 +395,9 @@ def render_progress_circles(screen_width=None):
     value_font_size = 17
     label_font_size = 14
     if isinstance(screen_width, (int, float)):
-        if screen_width <= 420:
+        if screen_width <= 315:
             columns = 2
-        elif screen_width <= 760:
+        elif screen_width <= 735:
             columns = 3
 
         circle_size = max(84, min(120, int((screen_width / (columns * 2.35)) * scale_factor)))
