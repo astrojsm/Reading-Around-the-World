@@ -2,6 +2,7 @@ import pandas as pd
 import streamlit as st
 import plotly.express as px
 
+from _version import __version__
 from lib_web import field_label, add_book, replace_book, remove_book
 from lib_web import load_books_from_csv, build_country_csv_df
 from lib_web import render_progress_circles, add_small_country_markers
@@ -481,3 +482,9 @@ if st.session_state.books:
         if st.button("데이터 삭제하기", width="stretch"):
             st.session_state.books = []
             st.rerun()
+
+st.markdown(f"""
+<div style="text-align: right; margin-top: 2rem; padding-top: 1rem; border-top: 1px solid rgba(0,0,0,0.1);">
+    <small>v{__version__} | © 2026 jsmoon.astro</small>
+</div>
+""", unsafe_allow_html=True)

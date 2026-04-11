@@ -24,6 +24,7 @@ continent_colors = {
     "AM": "#E6C84F",
 }
 
+# Coordinates based on https://latitude.to/
 small_country_points = {
     "GMB": {"lat": 13.3441, "lon": -16.6522},   # 감비아
     "REU": {"lat": -21.1307, "lon": 55.5265},   # 레위니옹

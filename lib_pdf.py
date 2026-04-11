@@ -348,6 +348,7 @@ def build_share_pdf():
         fontSize=9.5,
         leading=11.5,
         alignment=1,
+        textColor=colors.white,
     )
 
     table_data, section_rows, colored_rows = build_table_data(df, fonts, body_style, header_style, section_style)
@@ -374,7 +375,8 @@ def build_share_pdf():
 
     for row_index in section_rows:
         style_cmds.append(("SPAN", (0, row_index), (-1, row_index)))
-        style_cmds.append(("BACKGROUND", (0, row_index), (-1, row_index), colors.white))
+        style_cmds.append(("BACKGROUND", (0, row_index), (-1, row_index), colors.black))
+        style_cmds.append(("TEXTCOLOR", (0, row_index), (-1, row_index), colors.white))
 
     for row_index, rgb in colored_rows:
         style_cmds.append(("BACKGROUND", (0, row_index), (-1, row_index), colors.Color(rgb[0] / 255.0, rgb[1] / 255.0, rgb[2] / 255.0)))
