@@ -105,6 +105,20 @@ st.markdown(
             border-color: rgba(36, 66, 104, 0.34);
         }
 
+        /* Checkbox spacing */
+        [data-testid="stCheckbox"] {
+            margin-left: -1.8rem !important;
+            margin-top: 0 !important;
+            margin-bottom: -1.35rem !important;
+        }
+
+        [data-testid="stCheckbox"] > label {
+            margin-top: 0 !important;
+            margin-bottom: 0 !important;
+            padding-top: 0 !important;
+            padding-bottom: 0 !important;
+        }
+
         /* File uploader */
         [data-testid="stFileUploader"] {
             border-radius: 14px;
@@ -137,11 +151,11 @@ st.markdown(
     <section class="hero-card">
         <h1 class="hero-title">Reading Around the World Challenge</h1>
         <p class="hero-description">
-            Reading Around the World 챌린지는 전 세계 각 나라 출신 작가의 책을 최소 한 권씩 읽는 독서 챌린지입니다.<br>
+            Reading Around the World 챌린지는 전 세계 각 나라 출신 작가의 책을 최소 한 권씩 읽는 것을 목표로 하는 독서 챌린지입니다.<br>
             다양한 문화와 시선을 경험하며 나만의 세계 지도를 완성해보세요.<br>
-            200개가 넘는 국가와 지역의 작품을 읽으면 챌린지를 달성할 수 있습니다.
+            200개 국가와 지역의 작품을 읽으면 챌린지를 달성할 수 있습니다.
         </p>
-        <span class="hero-chip">현재 방문 국가: {visited_country_count} / 200 {crown_suffix}</span>
+        <span class="hero-chip">현재 방문 국가(지역): {visited_country_count} / 200 {crown_suffix}</span>
     </section>
     """,
     unsafe_allow_html=True,
@@ -175,6 +189,9 @@ if "share_pdf_ready" not in st.session_state:
 if "share_pdf_bytes" not in st.session_state:
     st.session_state.share_pdf_bytes = None
 
+if "basic_only_countries" not in st.session_state:
+    st.session_state.basic_only_countries = True
+
 # Book input form; add new books to the list
 # st.subheader("새로 추가하기")
 title_col1, title_col2 = st.columns(2)
@@ -193,9 +210,22 @@ with author_col2:
     field_label("저자(원어)")
     st.text_input("저자(원어)", key="author_original_input", label_visibility="collapsed")
 
-col1, col2, col3 = st.columns(3)
-with col1:
-    field_label("국가", required=True)
+label_col1, label_col2, label_col3 = st.columns(3)
+with label_col1:
+    continent_label_col, continent_toggle_col = st.columns([1, 4])
+    with continent_label_col:
+        field_label("국가", required=True)
+    with continent_toggle_col:
+        st.checkbox(
+            "기본 목록만 표시",
+            key="basic_only_countries",
+            help="체크를 해제하면 기본 200개 이외의 추가 국가/지역을 선택할 수 있습니다."
+        )
+with label_col3:
+    field_label("출판연도")
+
+input_col1, input_col2, input_col3 = st.columns(3)
+with input_col1:
     selected_continent = st.selectbox(
         "국가",
         options=continents_kr,
@@ -220,13 +250,18 @@ def format_country_option(country_name):
         return f"{country_name} (V)"
     return country_name
 
+show_basic_only_countries = st.session_state.get("basic_only_countries", True)
+
 filtered_countries = [
     name for name, info in country_map.items()
     if info["continent"] == selected_continent_code
+    and (not show_basic_only_countries or not info.get("additional", False))
 ]
 
-with col2:
-    field_label("")
+if st.session_state.get("selected_country") not in filtered_countries:
+    st.session_state.selected_country = None
+
+with input_col2:
     country_kr = st.selectbox(
         "국가",
         options=filtered_countries,
@@ -238,8 +273,7 @@ with col2:
         disabled=(selected_continent_code is None)
     )
 
-with col3:
-    field_label("출판연도")
+with input_col3:
     st.text_input("출판연도", key="publication_year_input", label_visibility="collapsed")
 
 add_col1, add_col2, add_col3 = st.columns([1, 1, 8])
@@ -367,7 +401,8 @@ if st.session_state.books:
             resolution=110,
             showcoastlines=True,
             showcountries=False,
-            lataxis=dict(range=[-55, 90])
+            lataxis=dict(range=[-55, 90]),
+            projection=dict(rotation=dict(lon=13))
         ),
         hoverdistance=1,
         hovermode="closest",

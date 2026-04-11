@@ -26,6 +26,7 @@ continent_colors = {
 
 small_country_points = {
     "GMB": {"lat": 13.3441, "lon": -16.6522},   # 감비아
+    "REU": {"lat": -21.1307, "lon": 55.5265},   # 레위니옹
     "MUS": {"lat": -20.2067, "lon": 57.6755},   # 모리셔스
     "STP": {"lat": 0.1997, "lon": 6.6106},      # 상투메프린시페
     "SYC": {"lat": -4.6839, "lon": 55.4495},    # 세이셸
@@ -34,15 +35,18 @@ small_country_points = {
 
     "TLS": {"lat": -8.7947, "lon": 126.1369},   # 동티모르
     "LBN": {"lat": 33.8736, "lon": 35.8637},    # 레바논
-    "MAC": {"lat": 22.1634, "lon": 113.5629},   # 마카오
+    "MAC": {"lat": 22.1634, "lon": 113.5629},   # 마카오 
     "MDV": {"lat": 1.9772, "lon": 73.5361},     # 몰디브
     "BHR": {"lat": 25.9434, "lon": 50.6015},    # 바레인
     "BRN": {"lat": 4.5242, "lon": 114.7196},    # 브루나이
     "SGP": {"lat": 1.3147, "lon": 103.8454},    # 싱가포르
+    "XTB": {"lat": 29.8556, "lon": 90.8750},    # 티베트
     "PSE": {"lat": 31.9474, "lon": 35.2272},    # 팔레스타인
-    "HKG": {"lat": 22.3701, "lon": 114.1536},   # 홍콩
-    
+    "HKG": {"lat": 22.2759, "lon": 114.1921},   # 홍콩
+
+    "GUM": {"lat": 13.4502, "lon": 144.7875},   # 괌
     "NRU": {"lat": -0.5284, "lon": 166.9342},   # 나우루
+    "NCL": {"lat": -21.2107, "lon": 165.8517},  # 누벨칼레도니
     "NIU": {"lat": -19.0543, "lon": -169.8621}, # 니우에
     "MHL": {"lat": 7.0897, "lon": 171.3803},    # 마셜제도
     "FSM": {"lat": 6.8875, "lon": 158.2151},    # 미크로네시아연방
@@ -54,6 +58,7 @@ small_country_points = {
     "TON": {"lat": -21.2418, "lon": -175.1285}, # 통가
     "TUV": {"lat": -8.5245, "lon": 179.1966},   # 투발루
     "PLW": {"lat": 7.3674, "lon": 134.5388},    # 팔라우
+    "PYF": {"lat": -17.6874, "lon": -149.3729}, # 프랑스령폴리네시아
     "FJI": {"lat": -17.4625, "lon": 179.2583},  # 피지
 
     "LUX": {"lat": 49.8153, "lon": 6.1333},     # 룩셈부르크
@@ -64,19 +69,42 @@ small_country_points = {
     "SMR": {"lat": 43.9429, "lon": 12.4601},    # 산마리노
     "AND": {"lat": 42.5423, "lon": 1.5977},     # 안도라
     "XKX": {"lat": 42.5833, "lon": 21.0001},    # 코소보
+    "FRO": {"lat": 61.8925, "lon": -6.9730},    # 페로제도
 
+    "GLP": {"lat": 15.9985, "lon": -61.7255},   # 과들루프
     "GRD": {"lat": 12.1100, "lon": -61.6935},   # 그레나다
-    "DMA": {"lat": 15.4239, "lon": -61.3501},   # 도미니카연방
+    "DMA": {"lat": 15.3017, "lon": -61.3881},   # 도미니카연방
+    "MTQ": {"lat": 14.6337, "lon": -61.0198},   # 마르티니크
     "BRB": {"lat": 13.1901, "lon": -59.5356},   # 바베이도스
     "BHS": {"lat": 25.0582, "lon": -77.3431},   # 바하마
     "LCA": {"lat": 13.9095, "lon": -60.9764},   # 세인트루시아
-    "VCT": {"lat": 13.2528, "lon": -61.1971},   # 세인트빈센트그레나딘
-    "KNA": {"lat": 17.2562, "lon": -62.7020},   # 세인트키츠네비스
-    "ATG": {"lat": 17.0869, "lon": -61.7835},   # 앤티가바부다
+    "VCT": {"lat": 13.0113, "lon": -61.2353},   # 세인트빈센트그레나딘
+    "KNA": {"lat": 17.3457, "lon": -62.8368},   # 세인트키츠네비스
+    "ABW": {"lat": 12.5176, "lon": -69.9649},   # 아루바
+    "ATG": {"lat": 17.3628, "lon": -61.7872},   # 앤티가바부다
     "JAM": {"lat": 18.1155, "lon": -77.2760},   # 자메이카
+    "CUW": {"lat": 12.2135, "lon": -68.9496},   # 퀴라소
     "TTO": {"lat": 10.4437, "lon": -61.4191},   # 트리니다드토바고
     "PRI": {"lat": 18.1987, "lon": -66.3527},   # 푸에르토리코
 }
+
+CARIBBEAN_STACK_ORDER = [
+    "LCA",  # 세인트루시아
+    "VCT",  # 세인트빈센트그레나딘
+    "GRD",  # 그레나다
+    "MTQ",  # 마르티니크
+    "DMA",  # 도미니카연방
+    "GLP",  # 과들루프
+    "KNA",  # 세인트키츠네비스
+    "ATG",  # 앤티가바부다
+]
+
+SMALL_MARKER_HOVER_TEMPLATE = (
+    "<b>%{customdata[0]}</b><br>"
+    "%{customdata[1]}%{customdata[2]}<br>"
+    "『%{customdata[3]}%{customdata[4]}』%{customdata[5]}<br>"
+    "<extra></extra>"
+)
 
 continents_code = [
     code for code in continent_labels.keys()
@@ -328,14 +356,18 @@ def build_progress_summary():
     continent_totals = {code: 0 for code in continent_labels.keys()}
     continent_done = {code: 0 for code in continent_labels.keys()}
 
+    country_isos = {info["iso"] for info in country_map.values()}
+    registered_known_isos = registered_isos & country_isos
+
     for _, info in country_map.items():
         code = info["continent"]
-        continent_totals[code] += 1
-        if info["iso"] in registered_isos:
+        if not info.get("additional", False):
+            continent_totals[code] += 1
+        if info["iso"] in registered_known_isos:
             continent_done[code] += 1
 
-    total_done = len(registered_isos)
-    total_all = len(country_map)
+    total_done = len(registered_known_isos)
+    total_all = sum(1 for info in country_map.values() if not info.get("additional", False))
 
     items = [
         {"code": "TT", "label": "전체", "done": total_done, "total": total_all},
@@ -406,7 +438,23 @@ def render_progress_circles():
 
     st.html(html)
 
+def build_small_marker_customdata(row):
+    return [
+        row["country_kr"],
+        row["author"],
+        optional_suffix(row["author_original"]),
+        row["title"],
+        optional_suffix(row["title_original"]),
+        optional_suffix(row["publication_year"]),
+    ]
+
 def add_small_country_markers(fig, books_df):
+    # Larger value means marker is drawn later (on top) within the same trace.
+    draw_order = {
+        iso: len(CARIBBEAN_STACK_ORDER) - idx
+        for idx, iso in enumerate(CARIBBEAN_STACK_ORDER)
+    }
+
     point_rows = []
     for _, row in books_df.iterrows():
         iso = row["country_iso"]
@@ -423,22 +471,17 @@ def add_small_country_markers(fig, books_df):
                 "continent_code": continent_code,
                 "lat": small_country_points[iso]["lat"],
                 "lon": small_country_points[iso]["lon"],
+                "draw_order": draw_order.get(iso, 0),
             })
 
     if point_rows:
         point_df = pd.DataFrame(point_rows)
 
         for continent_code, group in point_df.groupby("continent_code", dropna=False):
+            group = group.sort_values("draw_order", ascending=True, kind="mergesort")
             marker_color = continent_colors.get(continent_code, "gold")
             customdata = group.apply(
-                lambda r: [
-                    r["country_kr"],
-                    r["author"],
-                    optional_suffix(r["author_original"]),
-                    r["title"],
-                    optional_suffix(r["title_original"]),
-                    optional_suffix(r["publication_year"]),
-                ],
+                build_small_marker_customdata,
                 axis=1
             ).tolist()
             fig.add_trace(
@@ -452,12 +495,7 @@ def add_small_country_markers(fig, books_df):
                         line=dict(width=1, color="black")
                     ),
                     customdata=customdata,
-                    hovertemplate=(
-                        "<b>%{customdata[0]}</b><br>"
-                        "%{customdata[1]}%{customdata[2]}<br>"
-                        "『%{customdata[3]}%{customdata[4]}』%{customdata[5]}<br>"
-                        "<extra></extra>"
-                    ),
+                    hovertemplate=SMALL_MARKER_HOVER_TEMPLATE,
                     showlegend=False
                 )
             )

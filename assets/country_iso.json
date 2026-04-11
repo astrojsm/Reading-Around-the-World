@@ -47,6 +47,11 @@
     "iso": "LSO",
     "continent": "AF"
   },
+  "레위니옹": {
+    "iso": "REU",
+    "continent": "AF",
+    "additional": true
+  },
   "르완다": {
     "iso": "RWA",
     "continent": "AF"
@@ -102,6 +107,11 @@
   "상투메프린시페": {
     "iso": "STP",
     "continent": "AF"
+  },
+  "서사하라": {
+    "iso": "ESH",
+    "continent": "AF",
+    "additional": true
   },
   "세네갈": {
     "iso": "SEN",
@@ -215,6 +225,11 @@
     "iso": "TUN",
     "continent": "AF"
   },
+  "할라이브": {
+    "iso": "XHT",
+    "continent": "AF",
+    "additional": true
+  },
   "네팔": {
     "iso": "NPL",
     "continent": "AS"
@@ -237,7 +252,8 @@
   },
   "마카오": {
     "iso": "MAC",
-    "continent": "AS"
+    "continent": "AS",
+    "additional": true
   },
   "말레이시아": {
     "iso": "MYS",
@@ -295,9 +311,19 @@
     "iso": "ARE",
     "continent": "AS"
   },
+  "아루나찰프라데시": {
+    "iso": "XAP",
+    "continent": "AS",
+    "additional": true
+  },
   "아프가니스탄": {
     "iso": "AFG",
     "continent": "AS"
+  },
+  "악사이친": {
+    "iso": "XAC",
+    "continent": "AS",
+    "additional": true
   },
   "예멘": {
     "iso": "YEM",
@@ -347,6 +373,11 @@
     "iso": "CHN",
     "continent": "AS"
   },
+  "카슈미르": {
+    "iso": "XJK",
+    "continent": "AS",
+    "additional": true
+  },
   "카자흐스탄": {
     "iso": "KAZ",
     "continent": "AS"
@@ -387,6 +418,11 @@
     "iso": "TKM",
     "continent": "AS"
   },
+  "티베트": {
+    "iso": "XTB",
+    "continent": "AS",
+    "additional": true
+  },
   "파키스탄": {
     "iso": "PAK",
     "continent": "AS"
@@ -403,9 +439,19 @@
     "iso": "HKG",
     "continent": "AS"
   },
+  "괌": {
+    "iso": "GUM",
+    "continent": "OC",
+    "additional": true
+  },
   "나우루": {
     "iso": "NRU",
     "continent": "OC"
+  },
+  "누벨칼레도니": {
+    "iso": "NCL",
+    "continent": "OC",
+    "additional": true
   },
   "뉴질랜드": {
     "iso": "NZL",
@@ -413,7 +459,8 @@
   },
   "니우에": {
     "iso": "NIU",
-    "continent": "OC"
+    "continent": "OC",
+    "additional": true
   },
   "마셜제도": {
     "iso": "MHL",
@@ -441,7 +488,8 @@
   },
   "쿡제도": {
     "iso": "COK",
-    "continent": "OC"
+    "continent": "OC",
+    "additional": true
   },
   "키리바시": {
     "iso": "KIR",
@@ -462,6 +510,11 @@
   "팔라우": {
     "iso": "PLW",
     "continent": "OC"
+  },
+  "프랑스령폴리네시아": {
+    "iso": "PYF",
+    "continent": "OC",
+    "additional": true
   },
   "피지": {
     "iso": "FJI",
@@ -559,6 +612,11 @@
     "iso": "SRB",
     "continent": "EU"
   },
+  "스발바르제도": {
+    "iso": "SJM",
+    "continent": "EU",
+    "additional": true
+  },
   "스웨덴": {
     "iso": "SWE",
     "continent": "EU"
@@ -643,6 +701,11 @@
     "iso": "TUR",
     "continent": "EU"
   },
+  "페로제도": {
+    "iso": "FRO",
+    "continent": "EU",
+    "additional": true
+  },
   "포르투갈": {
     "iso": "PRT",
     "continent": "EU"
@@ -667,16 +730,21 @@
     "iso": "GUY",
     "continent": "AM"
   },
+  "과들루프": {
+    "iso": "GLP",
+    "continent": "AM",
+    "additional": true
+  },
+  "과테말라": {
+    "iso": "GTM",
+    "continent": "AM"
+  },
   "그레나다": {
     "iso": "GRD",
     "continent": "AM"
   },
   "그린란드": {
     "iso": "GRL",
-    "continent": "AM"
-  },
-  "과테말라": {
-    "iso": "GTM",
     "continent": "AM"
   },
   "니카라과": {
@@ -690,6 +758,11 @@
   "도미니카연방": {
     "iso": "DMA",
     "continent": "AM"
+  },
+  "마르티니크": {
+    "iso": "MTQ",
+    "continent": "AM",
+    "additional": true
   },
   "멕시코": {
     "iso": "MEX",
@@ -738,6 +811,11 @@
   "수리남": {
     "iso": "SUR",
     "continent": "AM"
+  },
+  "아루바": {
+    "iso": "ABW",
+    "continent": "AM",
+    "additional": true
   },
   "아르헨티나": {
     "iso": "ARG",
@@ -791,6 +869,11 @@
     "iso": "CUB",
     "continent": "AM"
   },
+  "퀴라소": {
+    "iso": "CUW",
+    "continent": "AM",
+    "additional": true
+  },
   "트리니다드토바고": {
     "iso": "TTO",
     "continent": "AM"
@@ -810,5 +893,10 @@
   "푸에르토리코": {
     "iso": "PRI",
     "continent": "AM"
-   }
+  },
+  "프랑스령기아나": {
+    "iso": "GUF",
+    "continent": "AM",
+    "additional": true
+  }
 }

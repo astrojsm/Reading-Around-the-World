@@ -2,4 +2,3 @@
 __pycache__/
 .venv/
 *.pyc
-test_import_all_zero.csv

@@ -235,7 +235,8 @@ def build_table_data(df, fonts, body_style, header_style, section_style):
     continent_done = {}
     for country_kr, info in country_map.items():
         code = info["continent"]
-        continent_totals[code] = continent_totals.get(code, 0) + 1
+        if not info.get("additional", False):
+            continent_totals[code] = continent_totals.get(code, 0) + 1
 
     for _, row in df.iterrows():
         country_kr = normalize(row.get("국가", ""))
@@ -250,6 +251,11 @@ def build_table_data(df, fonts, body_style, header_style, section_style):
         if not country_kr or country_kr not in country_map:
             continue
 
+        is_additional = country_map[country_kr].get("additional", False)
+        row_has_book = has_book_data(row)
+        if is_additional and not row_has_book:
+            continue
+
         continent_code = country_map[country_kr]["continent"]
         if current_continent != continent_code:
             logical_rows.append({"type": "section", "continent_code": continent_code})
@@ -259,7 +265,7 @@ def build_table_data(df, fonts, body_style, header_style, section_style):
             "type": "data",
             "continent_code": continent_code,
             "row": row,
-            "has_book": has_book_data(row),
+            "has_book": row_has_book,
         })
 
     row_idx = 1
