@@ -235,7 +235,7 @@ with input_col1:
         st.checkbox(
             "기본 목록만 보기",
             key="basic_only_countries",
-            help="체크를 해제하면 기본 200개 이외의 추가 국가/지역을 선택할 수 있습니다."
+            help="체크를 해제하면 기본 200개 이외의 국가/지역을 선택할 수 있어요."
         )
     selected_continent = st.selectbox(
         "국가",
@@ -251,7 +251,7 @@ with input_col2:
         st.checkbox(
             "기본 목록만 보기",
             key="basic_only_countries",
-            help="체크를 해제하면 기본 200개 이외의 추가 국가/지역을 선택할 수 있습니다."
+            help="체크를 해제하면 기본 200개 이외의 국가/지역을 선택할 수 있어요."
         )
 
 selected_continent_code = None
@@ -459,7 +459,7 @@ if st.session_state.books:
     fig = build_map_figure(map_height)
 
     if isinstance(screen_width, int) and screen_width <= 735:
-        split_map_height = int(screen_width * 0.9)
+        split_map_height = int(screen_width * 1.0) # Taller height for mobile split view
         for lon_range in MOBILE_SPLIT_LON_RANGES:
             if not isinstance(lon_range, (list, tuple)) or len(lon_range) != 2:
                 continue
