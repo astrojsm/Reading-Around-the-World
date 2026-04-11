@@ -2,7 +2,7 @@
 
 All notable changes to this project will be documented in this file.
 
-## [1.1.3] - 2026-04-11
+## [1.1.4] - 2026-04-11
 
 ### Improved
 - Split world map into 3 panels on mobile for better readability

@@ -459,7 +459,7 @@ if st.session_state.books:
     fig = build_map_figure(map_height)
 
     if isinstance(screen_width, int) and screen_width <= 735:
-        split_map_height = int(screen_width * 1.2) # Taller height for mobile split view
+        split_map_height = int(screen_width * 1.2) # Taller height for mobile split view 
         for lon_range in MOBILE_SPLIT_LON_RANGES:
             if not isinstance(lon_range, (list, tuple)) or len(lon_range) != 2:
                 continue
