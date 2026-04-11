@@ -2,6 +2,16 @@
 
 All notable changes to this project will be documented in this file.
 
+## [1.2.0] - 2026-04-12
+
+### Added
+- Added completion stamp on the hero section when challenge reaches 200 countries
+- Added completion stamp rendering to shared image exports when challenge is completed
+
+### Improved
+- Improved shared image title and stamp placement balance
+- Updated PDF header/section background and text color for improved readability
+
 ## [1.1.4] - 2026-04-11
 
 ### Improved

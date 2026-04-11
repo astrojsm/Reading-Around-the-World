@@ -1,9 +1,9 @@
-import io
-import unicodedata
+import io, unicodedata
 from html import escape
 from pathlib import Path
 
 import streamlit as st
+
 from reportlab.lib import colors
 from reportlab.lib.pagesizes import A4, landscape
 from reportlab.lib.styles import ParagraphStyle
@@ -321,8 +321,8 @@ def build_share_pdf():
     title_style = ParagraphStyle(
         "title",
         fontName=fonts["base_bold"],
-        fontSize=17,
-        leading=20,
+        fontSize=22,
+        leading=26,
         alignment=1,
         spaceBefore=0,
         spaceAfter=0,
@@ -333,7 +333,7 @@ def build_share_pdf():
         fontSize=9.5,
         leading=11.5,
         alignment=1,
-        textColor=colors.white,
+        textColor=colors.black,
     )
     body_style = ParagraphStyle(
         "body",
@@ -348,7 +348,7 @@ def build_share_pdf():
         fontSize=9.5,
         leading=11.5,
         alignment=1,
-        textColor=colors.white,
+        textColor=colors.black,
     )
 
     table_data, section_rows, colored_rows = build_table_data(df, fonts, body_style, header_style, section_style)
@@ -360,11 +360,12 @@ def build_share_pdf():
     col_widths = [(w / total_weight) * usable_width for w in col_weights]
 
     table = Table(table_data, colWidths=col_widths, repeatRows=1)
+    header_bg_color = colors.HexColor("#E6EAEE")
 
     style_cmds = [
         ("GRID", (0, 0), (-1, -1), 0.8, colors.HexColor("#d2d2d2")),
-        ("BACKGROUND", (0, 0), (-1, 0), colors.black),
-        ("TEXTCOLOR", (0, 0), (-1, 0), colors.white),
+        ("BACKGROUND", (0, 0), (-1, 0), header_bg_color),
+        ("TEXTCOLOR", (0, 0), (-1, 0), colors.black),
         ("ALIGN", (0, 0), (-1, -1), "CENTER"),
         ("VALIGN", (0, 0), (-1, -1), "MIDDLE"),
         ("TOPPADDING", (0, 0), (-1, -1), 6),
@@ -375,8 +376,8 @@ def build_share_pdf():
 
     for row_index in section_rows:
         style_cmds.append(("SPAN", (0, row_index), (-1, row_index)))
-        style_cmds.append(("BACKGROUND", (0, row_index), (-1, row_index), colors.black))
-        style_cmds.append(("TEXTCOLOR", (0, row_index), (-1, row_index), colors.white))
+        style_cmds.append(("BACKGROUND", (0, row_index), (-1, row_index), header_bg_color))
+        style_cmds.append(("TEXTCOLOR", (0, row_index), (-1, row_index), colors.black))
 
     for row_index, rgb in colored_rows:
         style_cmds.append(("BACKGROUND", (0, row_index), (-1, row_index), colors.Color(rgb[0] / 255.0, rgb[1] / 255.0, rgb[2] / 255.0)))
@@ -385,7 +386,7 @@ def build_share_pdf():
 
     story = [
         Paragraph(paragraph_markup(pdf_title, fonts, bold=True), title_style),
-        Spacer(1, 10 * mm),
+        Spacer(1, 5 * mm),
         table,
     ]
 

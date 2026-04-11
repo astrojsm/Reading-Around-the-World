@@ -1,6 +1,9 @@
 import json
 import pandas as pd
+from pandas.errors import EmptyDataError, ParserError
+
 import streamlit as st
+
 import plotly.graph_objects as go
 
 # List of countries for the dropdown
@@ -16,7 +19,7 @@ continent_labels = {
 }
 
 continent_colors = {
-    "TT": "#FFFFFF",
+    "TT": "#8C949C",
     "AF": "#60BD68",
     "AS": "#D96B6B",
     "OC": "#5DA5DA",
@@ -113,6 +116,14 @@ continents_code = [
 ]
 continents_kr = [continent_labels[c] for c in continents_code]
 
+BOOK_INPUT_KEYS = (
+    "title_input",
+    "title_original_input",
+    "author_input",
+    "author_original_input",
+    "publication_year_input",
+)
+
 def normalize_text(value):
     if pd.isna(value):
         return ""
@@ -121,6 +132,28 @@ def normalize_text(value):
 def optional_suffix(value):
     text = normalize_text(value)
     return f" ({text})" if text else ""
+
+def clear_book_form_inputs():
+    for key in BOOK_INPUT_KEYS:
+        st.session_state[key] = ""
+    st.session_state.selected_continent = None
+    st.session_state.selected_country = None
+
+def find_book_index_by_iso(country_iso):
+    return next(
+        (
+            index
+            for index, book in enumerate(st.session_state.books)
+            if book.get("country_iso") == country_iso
+        ),
+        None,
+    )
+
+def get_country_iso(country_kr):
+    country_info = country_map.get(country_kr)
+    if country_info is None:
+        return None
+    return country_info.get("iso")
 
 def field_label(text, required=False):
     required_mark = " <span style='color:#d32f2f'>*</span>" if required else ""
@@ -158,13 +191,15 @@ def add_book():
         )
         return
 
-    country_iso = country_map[country_kr]["iso"]
+    country_iso = get_country_iso(country_kr)
+    if not country_iso:
+        st.session_state.form_feedback = (
+            "warning",
+            "선택한 국가 정보를 찾을 수 없습니다. 다시 선택해주세요."
+        )
+        return
 
-    existing_index = None
-    for i, book in enumerate(st.session_state.books):
-        if book["country_iso"] == country_iso:
-            existing_index = i
-            break
+    existing_index = find_book_index_by_iso(country_iso)
 
     new_book = {
         "title": title,
@@ -182,13 +217,7 @@ def add_book():
             "success",
             f"{title}이(가) {country_kr}에 추가되었습니다."
         )
-        st.session_state.title_input = ""
-        st.session_state.title_original_input = ""
-        st.session_state.author_input = ""
-        st.session_state.author_original_input = ""
-        st.session_state.publication_year_input = ""
-        st.session_state.selected_continent = None
-        st.session_state.selected_country = None
+        clear_book_form_inputs()
     else:
         st.session_state.replace = {
             "index": existing_index,
@@ -203,13 +232,7 @@ def replace_book():
     new_book = candidate["new_book"]
     st.session_state.books[candidate["index"]] = new_book
     st.session_state.replace = None
-    st.session_state.title_input = ""
-    st.session_state.title_original_input = ""
-    st.session_state.author_input = ""
-    st.session_state.author_original_input = ""
-    st.session_state.publication_year_input = ""
-    st.session_state.selected_continent = None
-    st.session_state.selected_country = None
+    clear_book_form_inputs()
     st.session_state.form_feedback = (
         "success",
         f"{new_book['title']}이(가) {new_book['country_kr']}에 추가되었습니다."
@@ -221,17 +244,19 @@ def remove_book():
     if not country_kr:
         st.session_state.form_feedback = (
             "warning",
-            f"필수 항목을 입력해주세요: {', '.join(["국가"])}"
+            "필수 항목을 입력해주세요: 국가"
         )
         return
 
-    country_iso = country_map[country_kr]["iso"]
-    
-    existing_index = None
-    for i, book in enumerate(st.session_state.books):
-        if book["country_iso"] == country_iso:
-            existing_index = i
-            break
+    country_iso = get_country_iso(country_kr)
+    if not country_iso:
+        st.session_state.form_feedback = (
+            "warning",
+            "선택한 국가 정보를 찾을 수 없습니다. 다시 선택해주세요."
+        )
+        return
+
+    existing_index = find_book_index_by_iso(country_iso)
 
     if existing_index is not None:
         st.session_state.books.pop(existing_index)
@@ -281,7 +306,14 @@ def build_country_csv_df():
     return pd.DataFrame(rows)
 
 def load_books_from_csv(uploaded_file):
-    df = pd.read_csv(uploaded_file, dtype=str, keep_default_na=False)
+    try:
+        df = pd.read_csv(uploaded_file, dtype=str, keep_default_na=False)
+    except EmptyDataError:
+        return ("error", "CSV 파일이 비어 있습니다.")
+    except ParserError:
+        return ("error", "CSV 파일 형식을 읽을 수 없습니다. 파일 내용을 확인해주세요.")
+    except Exception as exc:
+        return ("error", f"CSV 파일을 불러오지 못했습니다: {exc}")
 
     required_columns = [
         "국가",
@@ -299,8 +331,8 @@ def load_books_from_csv(uploaded_file):
     loaded_books = []
     unsupported_countries = []
 
-    for _, row in df.iterrows():
-        country_kr = normalize_text(row["국가"])
+    for row in df.to_dict(orient="records"):
+        country_kr = normalize_text(row.get("국가", ""))
 
         if not country_kr:
             continue
@@ -309,11 +341,11 @@ def load_books_from_csv(uploaded_file):
             unsupported_countries.append(country_kr)
             continue
 
-        author = normalize_text(row["저자 (한국어)"])
-        author_original = normalize_text(row["저자 (원어)"])
-        title = normalize_text(row["제목 (한국어)"])
-        title_original = normalize_text(row["제목 (원어)"])
-        publication_year = normalize_text(row["출판연도"])
+        author = normalize_text(row.get("저자 (한국어)", ""))
+        author_original = normalize_text(row.get("저자 (원어)", ""))
+        title = normalize_text(row.get("제목 (한국어)", ""))
+        title_original = normalize_text(row.get("제목 (원어)", ""))
+        publication_year = normalize_text(row.get("출판연도", ""))
 
         # if there is no data for the country
         if not any([author, author_original, title, title_original, publication_year]):
@@ -418,7 +450,7 @@ def render_progress_circles(screen_width=None):
                 margin:0 auto {circle_margin_bottom}px auto;
                 border:{circle_border}px solid black;
                 border-radius:50%;
-                background:#efefef;
+                background:#f0f1f2;
                 overflow:hidden;
             ">
                 <div style="

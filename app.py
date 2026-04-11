@@ -1,7 +1,9 @@
 import pandas as pd
+
 import streamlit as st
-import plotly.express as px
 from streamlit_js_eval import streamlit_js_eval
+
+import plotly.express as px
 
 from _version import __version__
 from lib_web import field_label, add_book, replace_book, remove_book
@@ -13,10 +15,14 @@ from lib_web import normalize_text, optional_suffix
 from lib_img import prepare_share_image, reset_share_state
 from lib_pdf import prepare_share_pdf, reset_pdf_state
 
+continent_labels_reverse = {v: k for k, v in continent_labels.items()}
+BASIC_COUNTRY_HELP_TEXT = "체크를 해제하면 기본 200개 이외의 국가/지역을 선택할 수 있어요."
+
 current_books = st.session_state.get("books", [])
 visited_country_count = len({book.get("country_iso") for book in current_books if book.get("country_iso")})
 has_crown = visited_country_count >= 200
 crown_suffix = " 👑" if has_crown else ""
+hero_card_class = "hero-card hero-card-complete" if has_crown else "hero-card"
 
 st.set_page_config(
     page_title="Reading Around the World Challenge",
@@ -24,7 +30,7 @@ st.set_page_config(
 )
 
 st.markdown(
-    """
+    r"""
     <style>
         /* Layout */
         .main .block-container {
@@ -35,10 +41,67 @@ st.markdown(
 
         /* Hero */
         .hero-card {
+            --stamp-scale: 1;
             border: 1.5px solid rgba(30, 41, 59, 0.2);
             border-radius: 18px;
             padding: 1.6rem 1.8rem;
             margin-bottom: 1.1rem;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .hero-card-complete::after {
+            content: "READING \A AROUND \A THE WORLD \A\A\A";
+            position: absolute;
+            top: 2.02rem;
+            right: 4.72rem;
+            width: 178px;
+            height: 178px;
+            transform: rotate(-11deg) scale(var(--stamp-scale));
+            transform-origin: top right;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            text-align: center;
+            white-space: pre-line;
+            color: rgba(25, 85, 165, 0.88);
+            font-size: 1.32rem;
+            line-height: 1.24;
+            font-weight: 700;
+            letter-spacing: 0.08em;
+            text-shadow: 0 0 0 rgba(25, 85, 165, 0.88);
+            pointer-events: none;
+            border: 2px solid rgba(25, 85, 165, 0.65);
+            outline: 2px solid rgba(25, 85, 165, 0.65);
+            outline-offset: -8px;
+            border-radius: 2px;
+            padding: 10px;
+            box-sizing: border-box;
+            z-index: 1;
+        }
+
+        .hero-card-complete::before {
+            content: "COMPLETE";
+            position: absolute;
+            top: 2.02rem;
+            right: 4.98rem;
+            width: 178px;
+            height: 178px;
+            transform: rotate(-11deg) scale(var(--stamp-scale)) scaleX(0.95);
+            transform-origin: top right;
+            display: flex;
+            align-items: flex-end;
+            justify-content: center;
+            text-align: center;
+            color: rgba(25, 85, 165, 0.92);
+            font-size: 2.01rem;
+            line-height: 1;
+            font-weight: 800;
+            letter-spacing: 0.04em;
+            padding-bottom: 34px;
+            box-sizing: border-box;
+            pointer-events: none;
+            z-index: 2;
         }
 
         .hero-title {
@@ -131,7 +194,16 @@ st.markdown(
         /* Responsive */
         @media (max-width: 735px) {
             .hero-card {
+                --stamp-scale: 0.82;
                 padding: 1.2rem 1.1rem;
+            }
+
+            .hero-card-complete::after {
+                right: 2.62rem;
+            }
+
+            .hero-card-complete::before {
+                right: 2.88rem;
             }
         }
 
@@ -142,7 +214,7 @@ st.markdown(
 
 st.markdown(
     f"""
-    <section class="hero-card">
+    <section class="{hero_card_class}">
         <h1 class="hero-title">Reading Around the World Challenge</h1>
         <p class="hero-description">
             전 세계 각 나라 출신 작가의 책을 최소 한 권씩 읽는 것을 목표로 하는 독서 챌린지입니다.<br>
@@ -208,11 +280,10 @@ elif isinstance(raw_width, str) and raw_width.isdigit():
     st.session_state.screen_width = int(raw_width)
 
 # Book input form; add new books to the list
-# st.subheader("새로 추가하기")
 title_col1, title_col2 = st.columns(2)
 with title_col1:
     field_label("제목", required=True)
-    title = st.text_input("제목", key="title_input", label_visibility="collapsed")
+    st.text_input("제목", key="title_input", label_visibility="collapsed")
 with title_col2:
     field_label("제목(원어)")
     st.text_input("제목(원어)", key="title_original_input", label_visibility="collapsed")
@@ -220,7 +291,7 @@ with title_col2:
 author_col1, author_col2 = st.columns(2)
 with author_col1:
     field_label("저자", required=True)
-    author = st.text_input("저자", key="author_input", label_visibility="collapsed")
+    st.text_input("저자", key="author_input", label_visibility="collapsed")
 with author_col2:
     field_label("저자(원어)")
     st.text_input("저자(원어)", key="author_original_input", label_visibility="collapsed")
@@ -235,7 +306,7 @@ with input_col1:
         st.checkbox(
             "기본 목록만 보기",
             key="basic_only_countries",
-            help="체크를 해제하면 기본 200개 이외의 국가/지역을 선택할 수 있어요."
+            help=BASIC_COUNTRY_HELP_TEXT,
         )
     selected_continent = st.selectbox(
         "국가",
@@ -251,16 +322,12 @@ with input_col2:
         st.checkbox(
             "기본 목록만 보기",
             key="basic_only_countries",
-            help="체크를 해제하면 기본 200개 이외의 국가/지역을 선택할 수 있어요."
+            help=BASIC_COUNTRY_HELP_TEXT,
         )
 
-selected_continent_code = None
-if selected_continent is not None:
-    selected_continent_code = {
-        v: k for k, v in continent_labels.items()
-    }[selected_continent]
+selected_continent_code = continent_labels_reverse.get(selected_continent)
 
-registered_isos = {book["country_iso"] for book in st.session_state.books}
+registered_isos = {book.get("country_iso") for book in st.session_state.books if book.get("country_iso")}
 
 def format_country_option(country_name):
     info = country_map.get(country_name, {})
@@ -273,7 +340,7 @@ show_basic_only_countries = st.session_state.get("basic_only_countries", True)
 
 filtered_countries = [
     name for name, info in country_map.items()
-    if info["continent"] == selected_continent_code
+    if info.get("continent") == selected_continent_code
     and (not show_basic_only_countries or not info.get("additional", False))
 ]
 
@@ -296,7 +363,7 @@ with input_col3:
     field_label("출판연도")
     st.text_input("출판연도", key="publication_year_input", label_visibility="collapsed")
 
-add_col1, add_col2, add_col3 = st.columns([1, 1, 8])
+add_col1, add_col2, _ = st.columns([1, 1, 8])
 
 with add_col1:
     st.button("추가", on_click=add_book, width="stretch")
@@ -323,7 +390,7 @@ if st.session_state.replace is not None:
         f"{existing_book['title']}이(가) 등록되어 있어요."
     )
 
-    rep_col1, rep_col2, rep_col3 = st.columns([1, 1, 8])
+    rep_col1, rep_col2, _ = st.columns([1, 1, 8])
 
     with rep_col1:
         st.button("교체하기", on_click=replace_book, width="stretch")
@@ -382,7 +449,7 @@ if st.session_state.books:
     country_status["title_original_suffix"] = country_status["title_original"].apply(optional_suffix)
     country_status["publication_year_suffix"] = country_status["publication_year"].apply(optional_suffix)
     country_status["continent_code"] = country_status["country_kr"].map(
-        lambda country: country_map[country]["continent"]
+        lambda country: country_map.get(country, {}).get("continent")
     )
 
     WORLD_ROTATION_LON = 13
@@ -459,7 +526,7 @@ if st.session_state.books:
     fig = build_map_figure(map_height)
 
     if isinstance(screen_width, int) and screen_width <= 735:
-        split_map_height = int(screen_width * 1.2) # Taller height for mobile split view 
+        split_map_height = int(screen_width * 1.2)  # Taller height for mobile split view
         for lon_range in MOBILE_SPLIT_LON_RANGES:
             if not isinstance(lon_range, (list, tuple)) or len(lon_range) != 2:
                 continue
@@ -526,8 +593,8 @@ if st.session_state.books:
     with action_col2:
         if not st.session_state.share_pdf_ready:
             st.button(
-                "리스트로 공유하기", 
-                on_click=prepare_share_pdf, 
+                "리스트로 공유하기",
+                on_click=prepare_share_pdf,
                 width="stretch"
             )
         else:
