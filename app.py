@@ -5,7 +5,6 @@ from streamlit_js_eval import streamlit_js_eval
 
 import plotly.express as px
 
-from _version import __version__
 from lib_web import field_label, add_book, replace_book, remove_book
 from lib_web import load_books_from_csv, build_country_csv_df
 from lib_web import render_progress_circles, add_small_country_markers
@@ -15,8 +14,10 @@ from lib_web import normalize_text, optional_suffix
 from lib_img import prepare_share_image, reset_share_state
 from lib_pdf import prepare_share_pdf, reset_pdf_state
 
+__version__ = "1.2.1"
+
 continent_labels_reverse = {v: k for k, v in continent_labels.items()}
-BASIC_COUNTRY_HELP_TEXT = "체크를 해제하면 기본 200개 이외의 국가/지역을 선택할 수 있어요."
+BASIC_COUNTRY_HELP_TEXT = "체크를 해제하면 기본 200개 이외의 국가/지역을 선택할 수 있습니다."
 
 current_books = st.session_state.get("books", [])
 visited_country_count = len({book.get("country_iso") for book in current_books if book.get("country_iso")})
@@ -45,7 +46,7 @@ st.markdown(
             border: 1.5px solid rgba(30, 41, 59, 0.2);
             border-radius: 18px;
             padding: 1.6rem 1.8rem;
-            margin-bottom: 1.1rem;
+            margin-bottom: 0.30rem;
             position: relative;
             overflow: hidden;
         }
@@ -191,11 +192,28 @@ st.markdown(
             padding: 0.25rem 0.5rem;
         }
 
+        .session-save-notice {
+            margin-top: 0.25rem;
+            margin-bottom: 2.5rem;
+            padding: 0.95rem 1rem;
+            border-radius: 14px;
+            border: 1px solid rgba(185, 113, 31, 0.28);
+            background: linear-gradient(135deg, rgba(255, 247, 237, 0.98), rgba(255, 252, 245, 0.98));
+            color: #111111;
+            font-size: 0.95rem;
+            line-height: 1.6;
+            font-weight: 600;
+        }
+
         /* Responsive */
         @media (max-width: 735px) {
             .hero-card {
                 --stamp-scale: 0.82;
                 padding: 1.2rem 1.1rem;
+            }
+
+            .hero-description br.mobile-hide-break {
+                display: none;
             }
 
             .hero-card-complete::after {
@@ -217,9 +235,9 @@ st.markdown(
     <section class="{hero_card_class}">
         <h1 class="hero-title">Reading Around the World Challenge</h1>
         <p class="hero-description">
-            전 세계 각 나라 출신 작가의 책을 최소 한 권씩 읽는 것을 목표로 하는 독서 챌린지입니다.<br>
-            다양한 문화와 시선을 경험하며 나만의 세계 지도를 완성해보세요.<br>
-            200개 국가와 지역의 작품을 읽으면 챌린지를 달성할 수 있습니다.
+            전 세계 각 나라 출신 작가의 책을 최소 한 권씩 읽는 것을 목표로 하는 독서 챌린지입니다.<br class="mobile-hide-break">
+            독서를 통해 세계를 여행하면서 나만의 세계 지도를 완성해보세요.<br>
+            200개 이상 국가와 지역의 작품을 읽으면 챌린지를 달성할 수 있습니다.
         </p>
         <span class="hero-chip">현재 방문 국가(지역): {visited_country_count} / 200 {crown_suffix}</span>
     </section>
@@ -429,6 +447,15 @@ if st.session_state.upload_feedback is not None:
 if st.session_state.books:
     books_df = pd.DataFrame(st.session_state.books)
 
+    st.markdown(
+        """
+        <div class="session-save-notice">
+            입력된 데이터는 새로고침 시 제거됩니다. 데이터를 다시 불러오려면 아래의 "데이터 저장하기" 버튼을 이용해주세요.
+        </div>
+        """,
+        unsafe_allow_html=True,
+    )
+
     screen_width = st.session_state.get("screen_width")
     render_progress_circles(screen_width=screen_width)
     map_height = int(screen_width * 0.35) if isinstance(screen_width, int) else 500
@@ -455,7 +482,7 @@ if st.session_state.books:
     WORLD_ROTATION_LON = 13
     # Absolute longitude ranges for each split map panel (before offset)
     # MOBILE_SPLIT_LON_OFFSET: uniform longitude offset added to every range
-    MOBILE_SPLIT_LON_OFFSET = 27
+    MOBILE_SPLIT_LON_OFFSET = 32.5
     MOBILE_SPLIT_LON_RANGES = [
         (-180, -60),
         (-60, 60),
@@ -625,6 +652,6 @@ if st.session_state.books:
 
 st.markdown(f"""
 <div style="text-align: right; margin-top: 2rem; padding-top: 1rem; border-top: 1px solid rgba(0,0,0,0.1);">
-    <small>v{__version__} | © 2026 jsmoon.astro</small>
+    <small>v{__version__} | © 2026 astrojsm</small>
 </div>
 """, unsafe_allow_html=True)
