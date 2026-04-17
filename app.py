@@ -14,7 +14,7 @@ from lib_web import normalize_text, optional_suffix
 from lib_img import prepare_share_image, reset_share_state
 from lib_pdf import prepare_share_pdf, reset_pdf_state
 
-__version__ = "1.2.1"
+__version__ = "1.2.2"
 
 continent_labels_reverse = {v: k for k, v in continent_labels.items()}
 BASIC_COUNTRY_HELP_TEXT = "체크를 해제하면 기본 200개 이외의 국가/지역을 선택할 수 있습니다."
@@ -450,7 +450,7 @@ if st.session_state.books:
     st.markdown(
         """
         <div class="session-save-notice">
-            입력된 데이터는 새로고침 시 제거됩니다. 데이터를 다시 불러오려면 아래의 "데이터 저장하기" 버튼을 이용해주세요.
+            주의: 입력된 데이터는 새로고침 시 제거됩니다. 데이터를 다시 불러오려면 아래의 "데이터 저장하기" 버튼을 이용해주세요.
         </div>
         """,
         unsafe_allow_html=True,
